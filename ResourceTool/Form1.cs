@@ -74,7 +74,7 @@ namespace ResourceTool
                 }
 
                 // Show how many files
-                textBox3.Text = Files.Length.ToString();
+                textBox3.Text = list.Count.ToString();
 
                 foreach (string item in list)
                 {
