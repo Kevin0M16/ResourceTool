@@ -191,7 +191,7 @@ namespace ResourceTool
 
                         if (!list.Contains(dir.Name))
                         {
-                            list.Add("\"" + dir.Name + "\",");
+                            list.Add("ensure " + dir.Name);
                         }
                         else
                         {
