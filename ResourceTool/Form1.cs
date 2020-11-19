@@ -185,7 +185,10 @@ namespace ResourceTool
                     //    list.Add(dir.Name);
                     //}
 
-                    if (!dir.Name.Contains("stream") && !dir.Name.Contains("[") && (dir.GetFiles("fxmanifest.lua", SearchOption.TopDirectoryOnly).Length != 0 || dir.GetFiles("__resource.lua", SearchOption.TopDirectoryOnly).Length != 0))
+                    if (!dir.Name.Contains("stream") && 
+                        !dir.Name.Contains("[") && 
+                        !dir.Name.Contains("template") &&
+                        (dir.GetFiles("fxmanifest.lua", SearchOption.TopDirectoryOnly).Length != 0 || dir.GetFiles("__resource.lua", SearchOption.TopDirectoryOnly).Length != 0))
                     {
                         string name = Path.GetFileNameWithoutExtension(dir.FullName);
 
@@ -437,6 +440,66 @@ namespace ResourceTool
                         textBox4.Text = "TRUE";
                     }
                     //}                    
+                }
+
+                // Show how many files
+                textBox3.Text = list.Count.ToString();
+
+                foreach (string item in list)
+                {
+                    AppendLine(textBox1, item);
+                }
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            textBox3.Clear();
+            textBox4.Clear();
+
+
+            if (!string.IsNullOrEmpty(textBox2.Text))
+            {
+                RPath = textBox2.Text;
+            }
+            //If nmsPath is not found, show message and return
+            if (!Directory.Exists(RPath))
+            {
+                MessageBox.Show("Path not Found!", "Alert", MessageBoxButtons.OK);
+                return;
+            }
+
+            //Search for hg files in the current dir
+            DirectoryInfo dinfo = new DirectoryInfo(RPath);
+            FileInfo[] Files = dinfo.GetFiles("*.ytd", SearchOption.AllDirectories);
+
+            List<string> list = new List<string>();
+            // Set to false for no duplicates
+            textBox4.Text = "FALSE";
+
+            //if hg files are found, start adding them to dictionaries
+            if (Files.Length != 0)
+            {
+                foreach (FileInfo file in Files.OrderByDescending(f => f.Name))
+                {
+                    if (!file.Name.Contains("+") &&
+                        !file.Name.Contains("hi") &&
+                        !file.Name.Contains("share") &&
+                        file.Name.Contains("w_"))
+                    {
+                        string name = Path.GetFileNameWithoutExtension(file.FullName);
+
+                        if (!list.Contains(name))
+                        {
+                            list.Add(name);
+                        }
+                        else
+                        {
+                            // Show true if duplicates are found
+                            textBox4.Text = "TRUE";
+                        }
+                    }
                 }
 
                 // Show how many files
